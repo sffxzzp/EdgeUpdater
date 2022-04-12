@@ -69,6 +69,8 @@ class utillib:
 		if per > 100:
 			per = 100
 		print('\r%.2f%%' % per, end="")
+	def terminate(self):
+		os.system('taskkill /f /im msedge.exe')
 	def download(self):
 		try:
 			print('Downloading %s from url: %s' % (self.filename, self.url))
@@ -166,6 +168,7 @@ def main():
 		print('Branch: '+current.branch+'  Structure: '+current.structure)
 		print('A newer version found, '+current.version+' -> '+new.version)
 		input("Please close Edge and press enter to continue.")
+		new.terminate()
 		new.download()
 		new.extract()
 		new.edgepp()
