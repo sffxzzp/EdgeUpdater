@@ -133,6 +133,10 @@ func (b *browser) older(newVersion string) bool {
 	return false
 }
 
+func (b *browser) terminate() error {
+	return cmdRun("taskkill", "/f", "/im", "msedge.exe")
+}
+
 func (b *browser) download() error {
 	return download(b.filename, b.url)
 }
@@ -203,6 +207,7 @@ func main() {
 		fmt.Printf("A newer version found, %s -> %s\n", current.version, new.version)
 		fmt.Printf("Please close Edge and press enter to continue.\n")
 		fmt.Scanln()
+		new.terminate()
 		new.download()
 		new.extract()
 		new.edgepp()
