@@ -118,6 +118,15 @@ func (b *browser) loadcfg() {
 	b.version = cfg.Version
 }
 
+func (b *browser) removelog() {
+	fmt.Println("Removing log file ...")
+	if pathExists("..\\Data\\Default") {
+		os.RemoveAll("..\\Data\\Default\\ExtensionActivityEdge")
+		os.RemoveAll("..\\Data\\Default\\ExtensionActivityEdge-journal")
+	}
+	fmt.Println("Complete!")
+}
+
 func (b *browser) older(newVersion string) bool {
 	v1 := strings.Split(b.version, ".")
 	v2 := strings.Split(newVersion, ".")
@@ -134,7 +143,7 @@ func (b *browser) older(newVersion string) bool {
 }
 
 func (b *browser) terminate() error {
-	return cmdRun("taskkill", "/f", "/im", "msedge.exe")
+	return cmdRun("tskill", "msedge")
 }
 
 func (b *browser) download() error {
@@ -194,6 +203,7 @@ func main() {
 	current := newBrowser()
 	new := newBrowser()
 	current.loadcfg()
+	current.removelog()
 	new.branch = current.branch
 	new.structure = current.structure
 	fmt.Println("checking new version ...")
