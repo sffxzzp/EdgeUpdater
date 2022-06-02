@@ -54,6 +54,11 @@ class utillib:
 		self.branch = self.cfg["Branch"]
 		self.structure = self.cfg["Structure"]
 		self.version = self.cfg["Version"]
+	def removelog(self):
+		print('Removing log file ...')
+		os.system('del ..\\Data\\Default\\ExtensionActivityEdge')
+		os.system('del ..\\Data\\Default\\ExtensionActivityEdge-journal')
+		print('Complete!')
 	def older(self, v2):
 		v1 = self.version.split('.')
 		v2 = v2.split('.')
@@ -70,7 +75,7 @@ class utillib:
 			per = 100
 		print('\r%.2f%%' % per, end="")
 	def terminate(self):
-		os.system('taskkill /f /im msedge.exe')
+		os.system('tskill msedge')
 	def download(self):
 		try:
 			print('Downloading %s from url: %s' % (self.filename, self.url))
@@ -155,6 +160,7 @@ def main():
 	current = utillib()
 	new = utillib()
 	current.loadcfg()
+	current.removelog()
 	new.branch = current.branch
 	new.structure = current.structure
 	updateUrl = 'https://api.shuax.com/v2/edge'
