@@ -142,7 +142,7 @@ func (b *browser) download() error {
 
 func (b *browser) extract() []error {
 	var err []error
-	fmt.Println("Extracting ...")
+	fmt.Println("Extracting...")
 	err = append(err, cmdRun(".\\7za.exe", "x", b.filename, "-o.", "-aoa", "-y"))
 	err = append(err, os.Remove(b.filename))
 	err = append(err, cmdRun(".\\7za.exe", "x", "MSEDGE.7z", "-o.", "-aoa", "-y"))
@@ -161,7 +161,7 @@ func (b *browser) extract() []error {
 }
 
 func (b *browser) edgepp() error {
-	fmt.Printf("Copying edge++ ... ")
+	fmt.Printf("Copying edge++...")
 	err := copyFile(".\\version.dll", "..\\App\\version.dll")
 	fmt.Println("Complete!")
 	return err
@@ -169,11 +169,18 @@ func (b *browser) edgepp() error {
 
 func (b *browser) patch() []error {
 	var err []error
-	fmt.Println("Injecting version.dll to Edge ...")
+	fmt.Println("Injecting version.dll to Edge...")
 	err = append(err, cmdRun(".\\setdll.exe", "/d:..\\App\\version.dll", "..\\App\\msedge.exe"))
 	err = append(err, os.Remove("..\\App\\msedge.exe~"))
 	fmt.Println("Complete!")
 	return err
+}
+
+func (b *browser) clean() error {
+	fmt.Printf("\n\nPress enter to remove old version.\nOr close this window to keep it.\n")
+	fmt.Scanln()
+	fmt.Println("Cleaning old version...")
+	return os.RemoveAll("..\\App\\" + b.version)
 }
 
 func (b *browser) replaced(ver string) {
@@ -195,7 +202,7 @@ func main() {
 	current.loadcfg()
 	new.branch = current.branch
 	new.structure = current.structure
-	fmt.Println("checking new version ...")
+	fmt.Println("checking new version...")
 	updater := newEdgeUpdate()
 	updateData := updater.getInfo(new.branch, new.structure)
 	new.version = updateData.FileData.Version
@@ -212,6 +219,7 @@ func main() {
 		new.edgepp()
 		new.patch()
 		current.replaced(new.version)
+		current.clean()
 	} else {
 		fmt.Println("No updates.")
 	}
