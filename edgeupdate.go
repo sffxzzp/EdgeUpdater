@@ -4,15 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
+	"io"
 	"net/http"
 	"strings"
 )
 
 func httpPostJson(reqURL string, postData string) []byte {
-	res, _ := http.Post(reqURL, "application/json", bytes.NewBuffer([]byte(postData)))
-	data, _ := ioutil.ReadAll(res.Body)
+	res, _ := http.Post(reqURL, "application/json", bytes.NewBufferString(postData))
+	data, _ := io.ReadAll(res.Body)
 	defer res.Body.Close()
 	return data
 }
@@ -84,7 +83,7 @@ func (u *EdgeUpdate) getFile(name string, version string) fileRetF {
 		}
 	}
 	if fRet.FileId == "" {
-		log.Println("error")
+		fmt.Println("error")
 	}
 	return fRet
 }

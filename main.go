@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
@@ -107,7 +106,7 @@ func (b *browser) loadcfg() {
 	if !pathExists(cfgFile) {
 		pressExit(cfgFile+" 文件不存在！", 1)
 	}
-	content, err := ioutil.ReadFile(cfgFile)
+	content, err := os.ReadFile(cfgFile)
 	if err != nil || string(content) == "" {
 		pressExit(cfgFile+" 文件加载失败！", 1)
 	}
@@ -116,15 +115,6 @@ func (b *browser) loadcfg() {
 	b.branch = cfg.Branch
 	b.structure = cfg.Structure
 	b.version = cfg.Version
-}
-
-func (b *browser) removelog() {
-	fmt.Println("Removing log file ...")
-	if pathExists("..\\Data\\Default") {
-		os.RemoveAll("..\\Data\\Default\\ExtensionActivityEdge")
-		os.RemoveAll("..\\Data\\Default\\ExtensionActivityEdge-journal")
-	}
-	fmt.Println("Complete!")
 }
 
 func (b *browser) older(newVersion string) bool {
@@ -193,7 +183,7 @@ func (b *browser) replaced(ver string) {
 	cfg.Structure = b.structure
 	cfg.Version = ver
 	bytes, _ := json.Marshal(cfg)
-	err := ioutil.WriteFile(cfgFile, bytes, 0777)
+	err := os.WriteFile(cfgFile, bytes, 0777)
 	if err != nil {
 		pressExit(cfgFile+" 文件写入失败！", 1)
 	}
@@ -203,7 +193,6 @@ func main() {
 	current := newBrowser()
 	new := newBrowser()
 	current.loadcfg()
-	current.removelog()
 	new.branch = current.branch
 	new.structure = current.structure
 	fmt.Println("checking new version ...")
