@@ -4,6 +4,12 @@ EdgeUpdater-Go
 
 使用方法
 ------
+注：Edge 更新至 118.x 后，无法使用命令行参数以禁用 `RendererCodeIntegrity`。
+
+所以需要先执行 `reg add HKLM\Software\Policies\Microsoft\Edge /v RendererCodeIntegrityEnabled /t REG_DWORD /d 0` 以使用系统策略禁用。
+
+------
+
 下载后执行`edgeupdater.bat`即可。
 
 带有自动检查更新功能，如果无需自动检查，在`msedge.ini`文件里注释掉`0=edgeupdater.bat`一行即可。
