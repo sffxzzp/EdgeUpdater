@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/cheggaaa/pb/v3"
 )
 
 func intMin(a int, b int) int {
@@ -48,11 +50,13 @@ func download(filename string, url string) error {
 		return err
 	}
 	defer res.Body.Close()
-	_, err = io.Copy(out, res.Body)
+	bar := pb.Full.Start64(res.ContentLength)
+	defer bar.Finish()
+	reader := bar.NewProxyReader(res.Body)
+	_, err = io.Copy(out, reader)
 	if err != nil {
 		return err
 	}
-	fmt.Println("Download complete!")
 	return err
 }
 
@@ -142,7 +146,7 @@ func (b *browser) download() error {
 
 func (b *browser) extract() []error {
 	var err []error
-	fmt.Println("Extracting...")
+	fmt.Println("\nExtracting...")
 	err = append(err, cmdRun(".\\7za.exe", "x", b.filename, "-o.", "-aoa", "-y"))
 	err = append(err, os.Remove(b.filename))
 	err = append(err, cmdRun(".\\7za.exe", "x", "MSEDGE.7z", "-o.", "-aoa", "-y"))
