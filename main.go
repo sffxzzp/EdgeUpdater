@@ -157,7 +157,6 @@ func (b *browser) extract() []error {
 	err = append(err, os.Remove(".\\Chrome-bin\\"))
 	err = append(err, copyFile("..\\App\\"+b.version+"\\msedge.exe", "..\\App\\msedge.exe"))
 	err = append(err, os.Mkdir("..\\Data\\", 0777))
-	err = append(err, copyFile(".\\说明.txt", "..\\说明.txt"))
 	err = append(err, copyFile(".\\msedge.exe", "..\\msedge.exe"))
 	err = append(err, copyFile(".\\msedge.ini", "..\\msedge.ini"))
 	fmt.Println("Extract complete!")
